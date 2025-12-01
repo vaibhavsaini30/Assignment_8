@@ -14,16 +14,6 @@ struct Node
     }
 };
 
-Node *MinimumElement(Node *root)
-{
-    if (root == NULL) return NULL;
-
-    while (root->left != NULL)
-        root = root->left;
-
-    return root;
-}
-
 Node* TreeInsert(Node* root,int key){
     if(root==NULL)
         return new Node(key);
@@ -32,13 +22,24 @@ Node* TreeInsert(Node* root,int key){
     return root;
 }
 
-Node* TreeDelete(Node* root,int key){
-    if(root==NULL)
-        return root;
-    else if(key<root->data) TreeDelete(root->left,key);
-    else if(key>root->data) TreeDelete(root->right,key);
+Node* Successor(Node* root){
+    while(root!=NULL && root->left!=NULL){
+        root = root->left;
+    }
+    return root;
+}
+Node* DeleteNode(Node* root,int key){
+    if(root == NULL)
+        return NULL;
+    else if(key < root->data){
+        return DeleteNode(root->left,key);
+    }
+    else if(key > root->data){
+        return DeleteNode(root->right,key);
+    }
     else{
-        if(root->left==NULL && root->right==NULL){
+        //key == root->data
+        if(root->left == NULL && root->right == NULL){
             delete root;
             return NULL;
         }
@@ -52,13 +53,15 @@ Node* TreeDelete(Node* root,int key){
             delete root;
             return temp;
         }
-         Node* temp = MinimumElement(root->right);  // inorder successor
-        root->data = temp->data;
-        root->right = TreeDelete(root->right, temp->data);
+        else{
+            //2 child
+            Node* IS = Successor(root->right);
+            root->data = IS->data;
+            root->right = DeleteNode(root->right,IS->data);
+        }
     }
     return root;
 }
-
 int MaxDepth(Node* root)
 {
     if (root == NULL)
