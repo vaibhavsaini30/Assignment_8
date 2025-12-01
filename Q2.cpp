@@ -39,7 +39,8 @@ Node *TreeSearchIterative(Node *root, int k)
 
 Node *MaximumElement(Node *root)
 {
-    if (root == NULL) return NULL;
+    if (root == NULL)
+        return NULL;
 
     while (root->right != NULL)
         root = root->right;
@@ -49,7 +50,8 @@ Node *MaximumElement(Node *root)
 
 Node *MinimumElement(Node *root)
 {
-    if (root == NULL) return NULL;
+    if (root == NULL)
+        return NULL;
 
     while (root->left != NULL)
         root = root->left;
@@ -57,56 +59,69 @@ Node *MinimumElement(Node *root)
     return root;
 }
 
-Node *TreeSuccessor(Node *root, Node *x)
+Node *RightMostInLeftSubtree(Node *root)
 {
-    if (x->right != NULL)
-        return MinimumElement(x->right);
+    Node *ans;
+    root = root->left;
+    while (root != NULL)
+    {
+        ans = root;
+        root = root->right;
+    }
+    return ans;
+}
 
+Node *LeftMostInRightSubtree(Node *root)
+{
+    Node *ans;
+    root = root->right;
+    while (root != NULL)
+    {
+        ans = root;
+        root = root->left;
+    }
+    return ans;
+}
+void InorderSuccessorPredecessor(Node *root, int key)
+{
+    Node *curr = root;
     Node *succ = NULL;
-    Node *y = root;
-
-    while (y != NULL)
-    {
-        if (x->data < y->data)
-        {
-            succ = y;
-            y = y->left;
-        }
-        else if (x->data > y->data)
-        {
-            y = y->right;
-        }
-        else
-            break;
-    }
-    return succ;
-}
-
-Node *TreePredecessor(Node *root, Node *x)
-{
-    if (x->left != NULL)
-        return MaximumElement(x->left);
-
     Node *pred = NULL;
-    Node *y = root;
-
-    while (y != NULL)
+    while (curr != NULL)
     {
-        if (x->data > y->data)
+        if (key < curr->data)
         {
-            pred = y;
-            y = y->right;
+            succ = curr; // potential successor
+            curr = curr->left;
         }
-        else if (x->data < y->data)
+        else if (key > curr->data)
         {
-            y = y->left;
+            pred = curr; // potential predecessor
+            curr = curr->right;
         }
         else
+        {
+            if (curr->left != NULL)
+            {
+                pred = RightMostInLeftSubtree(curr->left);
+            }
+            if (curr->right != NULL)
+            {
+                succ = LeftMostInRightSubtree(curr->right);
+            }
             break;
+        }
     }
-    return pred;
-}
+    if (pred != NULL)
+        cout << "Predecessor = " << pred->data << endl;
+    else
+        cout << "No predecessor\n";
 
+    if (succ != NULL)
+        cout << "Successor = " << succ->data << endl;
+    else
+        cout << "No successor\n";
+}
 int main()
 {
     Node *root = new Node(4);
@@ -115,5 +130,6 @@ int main()
     root->left->left = new Node(1);
     root->left->right = new Node(3);
     root->right->right = new Node(7);
+    InorderSuccessorPredecessor(root,5);
     return 0;
 }
