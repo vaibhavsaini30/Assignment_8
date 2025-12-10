@@ -62,7 +62,6 @@ Node *MinimumElement(Node *root)
 Node *RightMostInLeftSubtree(Node *root)
 {
     Node *ans;
-    root = root->left;
     while (root != NULL)
     {
         ans = root;
@@ -74,7 +73,6 @@ Node *RightMostInLeftSubtree(Node *root)
 Node *LeftMostInRightSubtree(Node *root)
 {
     Node *ans;
-    root = root->right;
     while (root != NULL)
     {
         ans = root;

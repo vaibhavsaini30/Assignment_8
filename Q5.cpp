@@ -54,12 +54,5 @@ int main() {
         cout << A[i] << " ";
     cout << endl;
 
-    int B[100] = {0, 4, 7, 3, 1, 2};
-    heapSortDecreasing(B, n);
-    cout << "Decreasing Order: ";
-    for (int i = 1; i <= n; i++)
-        cout << B[i] << " ";
-    cout << endl;
-
     return 0;
 }

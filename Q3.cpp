@@ -23,10 +23,12 @@ Node* TreeInsert(Node* root,int key){
 }
 
 Node* Successor(Node* root){
-    while(root!=NULL && root->left!=NULL){
-        root = root->left;
+    Node* ans;
+    while(root!=NULL){
+        ans=root;
+        root=root->left;
     }
-    return root;
+    return ans;
 }
 Node* DeleteNode(Node* root,int key){
     if(root == NULL)
@@ -72,29 +74,21 @@ int MaxDepth(Node* root)
 
     return 1 + max(leftDepth, rightDepth);
 }
-int MinDepth(Node* root)
-{
+int MinDepth(Node* root) {
     if (root == NULL)
         return 0;
 
-    int leftDepth = MinDepth(root->left);
-    int rightDepth = MinDepth(root->right);
-
+    // If one child is NULL → go to the other child
     if (root->left == NULL)
-        return 1 + rightDepth;
+        return 1 + MinDepth(root->right);
 
     if (root->right == NULL)
-        return 1 + leftDepth;
+        return 1 + MinDepth(root->left);
 
-    int smallerDepth;
-
-    if (leftDepth < rightDepth)
-        smallerDepth = leftDepth;
-    else
-        smallerDepth = rightDepth;
-
-    return 1 + smallerDepth;
+    // Normal case → same as MaxDepth but using min()
+    return 1 + min(MinDepth(root->left), MinDepth(root->right));
 }
+
 
 void inorder(Node *root)
 {
@@ -110,5 +104,6 @@ int main(){
     root->right = new Node(3);
     root->left->left = new Node(4);
     root->left->right = new Node(5);
+    cout<<MinDepth(root);
     return 0;
 }
